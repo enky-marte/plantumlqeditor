@@ -88,6 +88,8 @@ MainWindow::MainWindow(QWidget *parent)
                    .arg(qApp->applicationName())
                    );
 
+    setWindowIcon(QIcon(":/icon32.png"));
+
     m_cache = new FileCache(0, this);
 
     m_recentDocuments = new RecentDocuments(MAX_RECENT_DOCUMENT_SIZE, this);

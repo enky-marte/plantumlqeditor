@@ -52,3 +52,5 @@ OTHER_FILES += \
 
 RESOURCES += \
     plantumlqeditor.qrc
+
+win32:RC_FILE = plantumlqeditor.rc

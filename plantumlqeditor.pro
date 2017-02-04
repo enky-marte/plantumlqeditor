@@ -35,6 +35,8 @@ HEADERS += \
 FORMS += \
     preferencesdialog.ui
 
+TRANSLATIONS += translations/plantumlqeditor_ru.ts
+
 OTHER_FILES += \
     assistant.svg \
     assistant.xml \

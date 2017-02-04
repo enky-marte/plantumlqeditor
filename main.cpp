@@ -1,6 +1,7 @@
 #include <QtSingleApplication>
 #include <QFileInfo>
 #include <QDebug>
+#include <QTranslator>
 #include "mainwindow.h"
 
 namespace {
@@ -68,6 +69,11 @@ int main(int argc, char *argv[])
                                .arg(open_document_path));
         return 0;
     }
+
+    QTranslator appTranslator;
+
+    appTranslator.load("plantumlqeditor_" + QLocale::system().name(), "translations");
+    a.installTranslator(&appTranslator);
 
     MainWindow w;
     if (open_document_path.isEmpty()) {

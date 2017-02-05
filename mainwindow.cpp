@@ -20,10 +20,10 @@ const int ASSISTANT_ITEM_NOTES_ROLE = Qt::UserRole + 1;
 const int MAX_RECENT_DOCUMENT_SIZE = 10;
 const int STATUSBAR_TIMEOUT = 3000; // in miliseconds
 const QString TITLE_FORMAT_STRING = "%1[*] - %2";
-const QString EXPORT_TO_MENU_FORMAT_STRING = QObject::tr("Export to %1");
-const QString EXPORT_TO_LABEL_FORMAT_STRING = QObject::tr("Export to: %1");
-const QString AUTOREFRESH_STATUS_LABEL = QObject::tr("Auto-refresh");
-const QString CACHE_SIZE_FORMAT_STRING = QObject::tr("Cache: %1");
+const char *EXPORT_TO_MENU_FORMAT_STRING = QT_TRANSLATE_NOOP("MainWindow", "Export to %1");
+const char *EXPORT_TO_LABEL_FORMAT_STRING = QT_TRANSLATE_NOOP("MainWindow", "Export to: %1");
+const char *AUTOREFRESH_STATUS_LABEL = QT_TRANSLATE_NOOP("MainWindow", "Auto-refresh");
+const char *CACHE_SIZE_FORMAT_STRING = QT_TRANSLATE_NOOP("MainWindow", "Cache: %1");
 const QSize ASSISTANT_ICON_SIZE(128, 128);
 
 QIcon iconFromSvg(QSize size, const QString& path)
@@ -144,8 +144,8 @@ void MainWindow::newDocument()
     m_documentPath.clear();
     m_exportPath.clear();
     m_cachedImage.clear();
-    m_exportImageAction->setText(EXPORT_TO_MENU_FORMAT_STRING.arg(""));
-    m_exportPathLabel->setText(EXPORT_TO_LABEL_FORMAT_STRING.arg(""));
+    m_exportImageAction->setText(tr(EXPORT_TO_MENU_FORMAT_STRING).arg(""));
+    m_exportPathLabel->setText(tr(EXPORT_TO_LABEL_FORMAT_STRING).arg(""));
     m_exportPathLabel->setEnabled(false);
 
     QString text = "@startuml\n\nclass Foo\n\n@enduml";
@@ -236,7 +236,7 @@ bool MainWindow::refreshFromCache()
                 if (cache_image.size()) {
                     m_cachedImage = cache_image;
                     m_imageWidget->load(m_cachedImage);
-                    statusBar()->showMessage(tr("Chache hit: %1").arg(key), STATUSBAR_TIMEOUT);
+                    statusBar()->showMessage(tr("Cache hit: %1").arg(key), STATUSBAR_TIMEOUT);
                     m_needsRefresh = false;
                     return true;
                 }
@@ -317,7 +317,7 @@ void MainWindow::refresh(bool forced)
 void MainWindow::updateCacheSizeInfo()
 {
     m_cacheSizeLabel->setText(m_useCache ?
-                                  CACHE_SIZE_FORMAT_STRING.arg(cacheSizeToString(m_cache->totalCost())) :
+                                  tr(CACHE_SIZE_FORMAT_STRING).arg(cacheSizeToString(m_cache->totalCost())) :
                                   tr("NO CACHE"));
 }
 
@@ -784,11 +784,11 @@ void MainWindow::exportImage(const QString &name)
         return;
     }
     file.write(m_cachedImage);
-    m_exportImageAction->setText(EXPORT_TO_MENU_FORMAT_STRING.arg(tmp_name));
+    m_exportImageAction->setText(tr(EXPORT_TO_MENU_FORMAT_STRING).arg(tmp_name));
     m_exportPath = tmp_name;
     QString short_tmp_name = QFileInfo(tmp_name).fileName();
     statusBar()->showMessage(tr("Image exported in %1").arg(short_tmp_name), STATUSBAR_TIMEOUT);
-    m_exportPathLabel->setText(EXPORT_TO_LABEL_FORMAT_STRING.arg(short_tmp_name));
+    m_exportPathLabel->setText(tr(EXPORT_TO_LABEL_FORMAT_STRING).arg(short_tmp_name));
     m_exportPathLabel->setEnabled(true);
 }
 
@@ -811,7 +811,7 @@ void MainWindow::createActions()
     m_saveAsDocumentAction->setShortcuts(QKeySequence::SaveAs);
     connect(m_saveAsDocumentAction, SIGNAL(triggered()), this, SLOT(onSaveAsActionTriggered()));
 
-    m_exportImageAction = new QAction(EXPORT_TO_MENU_FORMAT_STRING.arg(""), this);
+    m_exportImageAction = new QAction(tr(EXPORT_TO_MENU_FORMAT_STRING).arg(""), this);
     m_exportImageAction->setShortcut(Qt::CTRL + Qt::Key_E);
     connect(m_exportImageAction, SIGNAL(triggered()), this, SLOT(onExportImageActionTriggered()));
 
@@ -997,17 +997,17 @@ void MainWindow::createStatusBar()
 {
     m_exportPathLabel = new QLabel(this);
     m_exportPathLabel->setMinimumWidth(200);
-    m_exportPathLabel->setText(EXPORT_TO_LABEL_FORMAT_STRING.arg(""));
+    m_exportPathLabel->setText(tr(EXPORT_TO_LABEL_FORMAT_STRING).arg(""));
     m_exportPathLabel->setEnabled(false);
 
     m_currentImageFormatLabel = new QLabel(this);
 
     QFontMetrics font_metrics(m_exportPathLabel->font());
     m_cacheSizeLabel = new QLabel(this);
-    m_cacheSizeLabel->setMinimumWidth(font_metrics.width(QString(CACHE_SIZE_FORMAT_STRING.arg("#.## Mb"))));
+    m_cacheSizeLabel->setMinimumWidth(font_metrics.width(tr(CACHE_SIZE_FORMAT_STRING).arg("#.## Mb")));
 
     m_autoRefreshLabel = new QLabel(this);
-    m_autoRefreshLabel->setText(AUTOREFRESH_STATUS_LABEL);
+    m_autoRefreshLabel->setText(tr(AUTOREFRESH_STATUS_LABEL));
 
 #ifdef Q_WS_X11
     const int label_fram_style = QFrame::Panel | QFrame::Sunken;

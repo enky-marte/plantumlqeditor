@@ -3,7 +3,6 @@
 #include <QTextBlock>
 #include <QDebug>
 #include <QPainter>
-#include <QTextDocument>
 
 #include "textedit.h"
 

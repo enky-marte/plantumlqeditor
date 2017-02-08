@@ -157,7 +157,8 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
             }
             else
             {
-                QTextBlock textBlock = currentTextCursor.block();
+                QTextBlock textBlock = document()->findBlock(selectionStart);
+
                 while (textBlock.isValid() && textBlock.position() <= selectionEnd)
                 {
                     currentTextCursor.setPosition(textBlock.position());
@@ -172,8 +173,11 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
                         QString text = currentTextCursor.block().text();
                         for (int i = 0; i < qMin(indentLine.count(), text.length()); ++i)
                         {
-                            if (text.at(i).isSpace())
-                                currentTextCursor.deleteChar();
+                            if (!text.at(i).isSpace())
+                                break;
+
+                            currentTextCursor.deleteChar();
+                            selectionEnd--;
                         }
                     }
 

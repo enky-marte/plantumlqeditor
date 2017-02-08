@@ -3,6 +3,7 @@
 #include <QTextBlock>
 #include <QDebug>
 #include <QPainter>
+#include <QTextDocument>
 
 #include "textedit.h"
 
@@ -135,6 +136,7 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
         }
 
         case Qt::Key_Tab:
+        case Qt::Key_Backtab:
         {
             QString indentLine;
             if (_indentWithSpace)
@@ -146,7 +148,39 @@ void TextEdit::keyPressEvent(QKeyEvent *e)
                 indentLine = QChar('\t');
             }
 
-            textCursor().insertText(indentLine);
+            QTextCursor currentTextCursor = textCursor();
+            int selectionStart = currentTextCursor.selectionStart();
+            int selectionEnd = currentTextCursor.selectionEnd();
+
+            if (selectionStart == selectionEnd)
+            {
+                currentTextCursor.insertText(indentLine);
+            }
+            else
+            {
+                QTextBlock textBlock = currentTextCursor.block();
+                while (textBlock.isValid() && textBlock.position() <= selectionEnd)
+                {
+                    currentTextCursor.setPosition(textBlock.position());
+
+                    if (!e->modifiers().testFlag(Qt::ShiftModifier))
+                    {
+                        currentTextCursor.insertText(indentLine);
+                        selectionEnd += indentLine.count();
+                    }
+                    else
+                    {
+                        QString text = currentTextCursor.block().text();
+                        for (int i = 0; i < qMin(indentLine.count(), text.length()); ++i)
+                        {
+                            if (text.at(i).isSpace())
+                                currentTextCursor.deleteChar();
+                        }
+                    }
+
+                    textBlock = textBlock.next();
+                }
+            }
 
             break;
         }

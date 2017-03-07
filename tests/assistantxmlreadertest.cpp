@@ -9,7 +9,7 @@ bool writeFile(const QString& data, const QString& file_name) {
     if (!file.open(QFile::WriteOnly)) {
         return false;
     }
-    file.write(data.toAscii());
+    file.write(data.toUtf8());
     file.close();
     return true;
 }

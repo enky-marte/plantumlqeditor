@@ -1,4 +1,5 @@
 if(${ENABLE_UNIT_TESTS})
-        add_subdirectory(gmock-1.6.0)
+    add_subdirectory(gmock)
 endif()
+
 add_subdirectory (qtsingleapplication)

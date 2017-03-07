@@ -13,11 +13,10 @@ add_library (qtsingleapplicationlib STATIC
 )
 
 target_link_libraries (qtsingleapplicationlib
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Network
+    Qt5::Widgets
 )
 
-if (${ENABLE_QT5})
-    qt5_use_modules(qtsingleapplicationlib Core Widgets Gui Network)
-endif()
+target_include_directories(qtsingleapplicationlib PUBLIC ".")

@@ -1,32 +1,33 @@
 project (plantumlqeditor)
 
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.7)
 
 if(WIN32)
     add_definitions(-DUNICODE -DQT_LARGEFILE_SUPPORT)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc")
 endif()
 
 set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/)
 set (LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/)
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
-option (ENABLE_QT5 "Use Qt5 instead of Qt4" OFF)
-if (${ENABLE_QT5})
-    find_package(Qt5Core)
-    find_package(Qt5Widgets)
-else()
-    set (QT_QMAKE_EXECUTABLE $ENV{QT_QMAKE_EXECUTABLE})
-    find_package (Qt4 4.8 REQUIRED)
-    include (UseQt4)
-endif()
+set(CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 14)
 
-set (CMAKE_AUTOMOC TRUE)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Svg REQUIRED)
+find_package(Qt5Network REQUIRED)
 
 option (ENABLE_UNIT_TESTS "enable unit test" OFF)
 if (${ENABLE_UNIT_TESTS})
     set (CMAKE_BUILD_TYPE "Debug")
-    set (GMOCK_ROOT ${CMAKE_SOURCE_DIR}/thirdparty/gmock-1.6.0)
+    set (GMOCK_ROOT ${CMAKE_SOURCE_DIR}/thirdparty/gmock)
     set (GTEST_INCLUDE_DIR ${GMOCK_ROOT}/gtest/include)
     set (GTEST_MAIN_LIBRARY gtest_main)
     set (GTEST_LIBRARY gtest)
@@ -37,15 +38,9 @@ if (${ENABLE_UNIT_TESTS})
 endif()
 
 message ("CMAKE_BUILD_TYPE:  ${CMAKE_BUILD_TYPE}")
-message ("Qt Headers:       ${QT_INCLUDES}")
+message ("Qt Headers:        ${QT_INCLUDES}")
 
-include_directories (${CMAKE_SOURCE_DIR})
-include_directories (${QT_INCLUDES})
-include_directories (${CMAKE_SOURCE_DIR}/thirdparty/qtsingleapplication/src)
-
-if(WIN32)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc")
-endif()
+add_subdirectory (thirdparty)
 
 #-------------------------------------------------------------------------------
 # add to SOURCES files that will be tested with GMock and GTest
@@ -54,30 +49,22 @@ set (SOURCES_LIB
     assistantxmlreader.cpp
     filecache.cpp
     recentdocuments.cpp
-)
-
-#-------------------------------------------------------------------------------
-# add to EXTRA_HEADERS all headers but those for classes for QObject derived
-# classes
-#-------------------------------------------------------------------------------
-set (EXTRA_HEADERS_LIB
-)
+    )
 
 add_library (plantumlqeditorlib STATIC
     ${SOURCES_LIB}
     ${EXTRA_HEADERS_LIB}
-)
-
-if (${ENABLE_QT5})
-    qt5_use_modules(plantumlqeditorlib Core Widgets Gui)
-endif()
+    )
 
 target_link_libraries (plantumlqeditorlib
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-)
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::Svg
+    )
 
-add_subdirectory (thirdparty)
+target_include_directories(plantumlqeditorlib PUBLIC ".")
+
 if(${ENABLE_UNIT_TESTS})
     add_subdirectory(tests)
 endif()
@@ -85,61 +72,40 @@ endif()
 #-------------------------------------------------------------------------------
 # the real app
 #-------------------------------------------------------------------------------
-set (SOURCES_APP
+set(SOURCES_APP
     main.cpp
     mainwindow.cpp
     preferencesdialog.cpp
     previewwidget.cpp
     utils.cpp
     textedit.cpp
-)
+    )
 
-set (EXTRA_HEADERS_APP
+set(EXTRA_HEADERS_APP
     utils.h
     settingsconstants.h
-)
+    )
 
 set(FORMS_APP
     preferencesdialog.ui
     logdialog.ui
-)
-
-if (${ENABLE_QT5})
-    qt5_wrap_ui(SOURCES_FORMS_APP ${FORMS_APP})
-else()
-    qt4_wrap_ui(SOURCES_FORMS_APP ${FORMS_APP})
-endif()
-
+    )
 
 set(QRC_APP
     plantumlqeditor.qrc
-)
+    )
 
-if (${ENABLE_QT5})
-    qt5_add_resources(SOURCES_QRC_APP ${QRC_APP})
-else()
-    qt4_add_resources(SOURCES_QRC_APP ${QRC_APP})
-endif()
-
-
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-
-add_executable(plantumlqeditor
+add_executable(plantumlqeditor WIN32
     ${SOURCES_APP}
     ${SOURCES_FORMS_APP}
     ${SOURCES_QRC_APP}
     ${EXTRA_HEADERS_APP}
-)
-
-if (${ENABLE_QT5})
-    qt5_use_modules(plantumlqeditor Core Widgets Gui Svg)
-endif()
+    )
 
 target_link_libraries(plantumlqeditor
-    ${QT_QTSVG_LIBRARY}
     plantumlqeditorlib
     qtsingleapplicationlib
-)
+    )
 
 #-------------------------------------------------------------------------------
 # installer support
@@ -167,7 +133,7 @@ if(WIN32)
         RUNTIME
         DESTINATION bin
         COMPONENT applications
-    )
+        )
 
     file(GLOB LIBGCC_S_SJLJ_DLL ${CMAKE_FIND_ROOT_PATH}/bin/libgcc_s_sjlj*.dll)
     file(GLOB LIBPNG_DLL ${CMAKE_FIND_ROOT_PATH}/bin/libpng*.dll)
@@ -184,17 +150,17 @@ if(WIN32)
         ${CMAKE_FIND_ROOT_PATH}/bin/zlib1.dll
         DESTINATION bin
         COMPONENT applications
-    )
+        )
 
     install(FILES assistant.xml
         DESTINATION share/plantumlqeditor
         COMPONENT assistant
-    )
+        )
 
     install(DIRECTORY icons
         DESTINATION share/plantumlqeditor
         COMPONENT assistant
-    )
+        )
 
     set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "PlantUML QEditor")
     set(CPACK_COMPONENT_ASSISTANT_DISPLAY_NAME "Default Assistant")

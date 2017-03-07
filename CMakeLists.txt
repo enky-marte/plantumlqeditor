@@ -15,9 +15,9 @@ option (ENABLE_QT5 "Use Qt5 instead of Qt4" ON)
 if (${ENABLE_QT5})
     find_package(Qt5Core REQUIRED)
     find_package(Qt5Widgets REQUIRED)
-	find_package(Qt5Gui REQUIRED)
-	find_package(Qt5Svg REQUIRED)
-	set(QT_QTMAIN_LIBRARY Qt5::WinMain)
+    find_package(Qt5Gui REQUIRED)
+    find_package(Qt5Svg REQUIRED)
+    set(QT_QTMAIN_LIBRARY Qt5::WinMain)
 else()
     set (QT_QMAKE_EXECUTABLE $ENV{QT_QMAKE_EXECUTABLE})
     find_package (Qt4 4.8 REQUIRED)
@@ -57,19 +57,19 @@ set (SOURCES_LIB
     assistantxmlreader.cpp
     filecache.cpp
     recentdocuments.cpp
-)
+    )
 
 #-------------------------------------------------------------------------------
 # add to EXTRA_HEADERS all headers but those for classes for QObject derived
 # classes
 #-------------------------------------------------------------------------------
 set (EXTRA_HEADERS_LIB
-)
+    )
 
 add_library (plantumlqeditorlib STATIC
     ${SOURCES_LIB}
     ${EXTRA_HEADERS_LIB}
-)
+    )
 
 if (${ENABLE_QT5})
     qt5_use_modules(plantumlqeditorlib Core Widgets Gui)
@@ -78,7 +78,7 @@ endif()
 target_link_libraries (plantumlqeditorlib
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
-)
+    )
 
 add_subdirectory (thirdparty)
 if(${ENABLE_UNIT_TESTS})
@@ -95,17 +95,17 @@ set (SOURCES_APP
     previewwidget.cpp
     utils.cpp
     textedit.cpp
-)
+    )
 
 set (EXTRA_HEADERS_APP
     utils.h
     settingsconstants.h
-)
+    )
 
 set(FORMS_APP
     preferencesdialog.ui
     logdialog.ui
-)
+    )
 
 if (${ENABLE_QT5})
     qt5_wrap_ui(SOURCES_FORMS_APP ${FORMS_APP})
@@ -116,7 +116,7 @@ endif()
 
 set(QRC_APP
     plantumlqeditor.qrc
-)
+    )
 
 if (${ENABLE_QT5})
     qt5_add_resources(SOURCES_QRC_APP ${QRC_APP})
@@ -128,19 +128,19 @@ endif()
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 if (WIN32)
-	add_executable(plantumlqeditor WIN32
-		${SOURCES_APP}
-		${SOURCES_FORMS_APP}
-		${SOURCES_QRC_APP}
-		${EXTRA_HEADERS_APP}
-	)
+    add_executable(plantumlqeditor WIN32
+        ${SOURCES_APP}
+        ${SOURCES_FORMS_APP}
+        ${SOURCES_QRC_APP}
+        ${EXTRA_HEADERS_APP}
+        )
 else()
-	add_executable(plantumlqeditor
-		${SOURCES_APP}
-		${SOURCES_FORMS_APP}
-		${SOURCES_QRC_APP}
-		${EXTRA_HEADERS_APP}
-	)
+    add_executable(plantumlqeditor
+        ${SOURCES_APP}
+        ${SOURCES_FORMS_APP}
+        ${SOURCES_QRC_APP}
+        ${EXTRA_HEADERS_APP}
+        )
 endif()
 
 if (${ENABLE_QT5})
@@ -148,19 +148,19 @@ if (${ENABLE_QT5})
 endif()
 
 if (WIN32)
-	target_link_libraries(plantumlqeditor
-		${QT_QTMAIN_LIBRARY}
-		${QT_QTSVG_LIBRARY}
-		plantumlqeditorlib
-		qtsingleapplicationlib
-	)
-	set_target_properties (plantumlqeditor PROPERTIES WIN32_EXECUTABLE TRUE)
+    target_link_libraries(plantumlqeditor
+        ${QT_QTMAIN_LIBRARY}
+        ${QT_QTSVG_LIBRARY}
+        plantumlqeditorlib
+        qtsingleapplicationlib
+        )
+    set_target_properties (plantumlqeditor PROPERTIES WIN32_EXECUTABLE TRUE)
 else()
-	target_link_libraries(plantumlqeditor
-		${QT_QTSVG_LIBRARY}
-		plantumlqeditorlib
-		qtsingleapplicationlib
-	)
+    target_link_libraries(plantumlqeditor
+        ${QT_QTSVG_LIBRARY}
+        plantumlqeditorlib
+        qtsingleapplicationlib
+        )
 endif()
 
 #-------------------------------------------------------------------------------
@@ -189,7 +189,7 @@ if(WIN32)
         RUNTIME
         DESTINATION bin
         COMPONENT applications
-    )
+        )
 
     file(GLOB LIBGCC_S_SJLJ_DLL ${CMAKE_FIND_ROOT_PATH}/bin/libgcc_s_sjlj*.dll)
     file(GLOB LIBPNG_DLL ${CMAKE_FIND_ROOT_PATH}/bin/libpng*.dll)
@@ -206,17 +206,17 @@ if(WIN32)
         ${CMAKE_FIND_ROOT_PATH}/bin/zlib1.dll
         DESTINATION bin
         COMPONENT applications
-    )
+        )
 
     install(FILES assistant.xml
         DESTINATION share/plantumlqeditor
         COMPONENT assistant
-    )
+        )
 
     install(DIRECTORY icons
         DESTINATION share/plantumlqeditor
         COMPONENT assistant
-    )
+        )
 
     set(CPACK_COMPONENT_APPLICATIONS_DISPLAY_NAME "PlantUML QEditor")
     set(CPACK_COMPONENT_ASSISTANT_DISPLAY_NAME "Default Assistant")

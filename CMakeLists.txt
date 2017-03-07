@@ -4,6 +4,7 @@ cmake_minimum_required (VERSION 3.7)
 
 if(WIN32)
     add_definitions(-DUNICODE -DQT_LARGEFILE_SUPPORT)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc")
 endif()
 
 set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/)
@@ -38,10 +39,6 @@ endif()
 
 message ("CMAKE_BUILD_TYPE:  ${CMAKE_BUILD_TYPE}")
 message ("Qt Headers:        ${QT_INCLUDES}")
-
-if(WIN32)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc")
-endif()
 
 add_subdirectory (thirdparty)
 
@@ -98,11 +95,7 @@ set(QRC_APP
     plantumlqeditor.qrc
     )
 
-if(WIN32)
-    set(OPTIONS_APP WIN32)
-endif()
-
-add_executable(plantumlqeditor ${OPTIONS_APP}
+add_executable(plantumlqeditor WIN32
     ${SOURCES_APP}
     ${SOURCES_FORMS_APP}
     ${SOURCES_QRC_APP}
@@ -113,10 +106,6 @@ target_link_libraries(plantumlqeditor
     plantumlqeditorlib
     qtsingleapplicationlib
     )
-
-if(WIN32)
-    set_target_properties(plantumlqeditor PROPERTIES WIN32_EXECUTABLE TRUE)
-endif()
 
 #-------------------------------------------------------------------------------
 # installer support

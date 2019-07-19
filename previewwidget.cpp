@@ -21,7 +21,7 @@
 #include <QSvgRenderer>
 
 namespace {
-    const int ZOOM_BIG_INCREMENT = 200;  // used when m_zoomScale > ZOOM_ORIGINAL_SCALE
+//    const int ZOOM_BIG_INCREMENT = 200;  // used when m_zoomScale > ZOOM_ORIGINAL_SCALE
     const int ZOOM_SMALL_INCREMENT = 25; // used when m_zoomScale < ZOOM_ORIGINAL_SCALE
     const int MAX_ZOOM_SCALE = 900;
     const int MIN_ZOOM_SCALE = 25;
@@ -57,7 +57,7 @@ void PreviewWidget::setZoomScale(int zoom_scale)
 
 void PreviewWidget::zoomIn()
 {
-    int new_scale = m_zoomScale + ((m_zoomScale >= ZOOM_ORIGINAL_SCALE) ? ZOOM_BIG_INCREMENT : ZOOM_SMALL_INCREMENT);
+    int new_scale = m_zoomScale + ZOOM_SMALL_INCREMENT;
     if (new_scale > MAX_ZOOM_SCALE)
         new_scale = MAX_ZOOM_SCALE;
     setZoomScale(new_scale);
@@ -65,7 +65,7 @@ void PreviewWidget::zoomIn()
 
 void PreviewWidget::zoomOut()
 {
-    int new_scale = m_zoomScale - ((m_zoomScale <= ZOOM_ORIGINAL_SCALE) ? ZOOM_SMALL_INCREMENT : ZOOM_BIG_INCREMENT);
+    int new_scale = m_zoomScale - ZOOM_SMALL_INCREMENT;
     if (new_scale < MIN_ZOOM_SCALE)
         new_scale = MIN_ZOOM_SCALE;
     setZoomScale(new_scale);

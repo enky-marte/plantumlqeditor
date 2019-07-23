@@ -701,7 +701,7 @@ void MainWindow::openDocument(const QString &name)
         tmp_name = QFileDialog::getOpenFileName(this,
                                                 tr("Select a file to open"),
                                                 m_lastDir,
-                                                "PlantUML (*.plantuml);; All Files (*.*)"
+                                                "PlantUML (*.plantuml *.puml);; All Files (*.*)"
                                                 );
         if (tmp_name.isEmpty()) {
             return;
@@ -734,7 +734,7 @@ bool MainWindow::saveDocument(const QString &name)
         file_path = QFileDialog::getSaveFileName(this,
                                                 tr("Select where to store the document"),
                                                 m_lastDir,
-                                                "PlantUML (*.plantuml);; All Files (*.*)"
+                                                "PlantUML (*.plantuml *.puml);; All Files (*.*)"
                                                 );
         if (file_path.isEmpty()) {
             return false;

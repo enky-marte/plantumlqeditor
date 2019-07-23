@@ -19,6 +19,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QSvgRenderer>
+#include <QWheelEvent>
 
 namespace {
 //    const int ZOOM_BIG_INCREMENT = 200;  // used when m_zoomScale > ZOOM_ORIGINAL_SCALE
@@ -29,7 +30,7 @@ namespace {
 PreviewWidget::PreviewWidget(QWidget *parent)
     : QWidget(parent)
     , m_mode(NoMode)
-    , m_zoomScale(ZOOM_ORIGINAL_SCALE)
+    , m_zoomScale(0)
 {
     m_svgRenderer = new QSvgRenderer(this);
 }
@@ -42,8 +43,20 @@ void PreviewWidget::load(const QByteArray &data)
     } else if (m_mode == SvgMode) {
         m_svgRenderer->load(data);
     }
-    zoomImage();
+    m_zoomScale = 0;
+    setZoomScale(ZOOM_ORIGINAL_SCALE);
     update();
+}
+
+void PreviewWidget::wheelEvent(QWheelEvent* event)
+{
+    QPoint wheel_degrees = event->angleDelta() / 8;
+
+    if(wheel_degrees.ry() > 0) {
+        zoomIn();
+    } else if (wheel_degrees.ry() < 0) {
+        zoomOut();
+    }
 }
 
 void PreviewWidget::setZoomScale(int zoom_scale)

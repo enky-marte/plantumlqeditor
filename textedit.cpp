@@ -33,13 +33,13 @@ public:
         this->editor = editor;
     }
 
-    QSize sizeHint() const
+    QSize sizeHint() const override
     {
         return QSize(editor->lineNumberAreaWidth(), 0);
     }
 
 protected:
-    void paintEvent(QPaintEvent *event)
+    void paintEvent(QPaintEvent *event) override
     {
         editor->lineNumberAreaPaintEvent(event);
     }

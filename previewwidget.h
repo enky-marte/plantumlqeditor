@@ -29,12 +29,14 @@ class PreviewWidget : public QWidget
 public:
     enum Mode { NoMode, PngMode, SvgMode };
 
-    explicit PreviewWidget(QWidget *parent = 0);
+    explicit PreviewWidget(QWidget *parent = nullptr);
 
     Mode mode() const { return m_mode; }
     void setMode(Mode new_mode) { m_mode = new_mode; }
 
     void load(const QByteArray &data);
+
+    void wheelEvent(QWheelEvent* event);
 
 public slots:
     void zoomOriginal() { setZoomScale(ZOOM_ORIGINAL_SCALE); }

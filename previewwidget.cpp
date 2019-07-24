@@ -35,7 +35,7 @@ PreviewWidget::PreviewWidget(QWidget *parent)
     m_svgRenderer = new QSvgRenderer(this);
 }
 
-void PreviewWidget::load(const QByteArray &data)
+void PreviewWidget::load(const QByteArray &data, bool reset_zoom_factor)
 {
     if (m_mode == PngMode) {
         m_image.loadFromData(data);
@@ -43,8 +43,10 @@ void PreviewWidget::load(const QByteArray &data)
     } else if (m_mode == SvgMode) {
         m_svgRenderer->load(data);
     }
-    m_zoomScale = 0;
-    setZoomScale(ZOOM_ORIGINAL_SCALE);
+    if (reset_zoom_factor) {
+        m_zoomScale = 0;
+        setZoomScale(ZOOM_ORIGINAL_SCALE);
+    }
     update();
 }
 

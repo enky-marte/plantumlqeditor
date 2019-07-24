@@ -356,7 +356,7 @@ void MainWindow::focusAssistant()
 void MainWindow::refreshFinished()
 {
     m_cachedImage = m_process->readAll();
-    m_imageWidget->load(m_cachedImage);
+    m_imageWidget->load(m_cachedImage, false);
     m_process->deleteLater();
     m_process = 0;
 

@@ -34,7 +34,7 @@ public:
     Mode mode() const { return m_mode; }
     void setMode(Mode new_mode) { m_mode = new_mode; }
 
-    void load(const QByteArray &data);
+    void load(const QByteArray &data, bool reset_zoom_factor = true);
 
     void wheelEvent(QWheelEvent* event);
 

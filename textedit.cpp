@@ -68,7 +68,8 @@ TextEdit::TextEdit(QWidget *parent) :
 void TextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
     QPainter painter(lineNumberArea);
-    painter.fillRect(event->rect(), Qt::lightGray);
+    //painter.fillRect(event->rect(), Qt::lightGray);
+    painter.fillRect(event->rect(), QColor(70, 70, 70, 255));
 
 
     QTextBlock block = firstVisibleBlock();
@@ -81,7 +82,8 @@ void TextEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
         if (block.isVisible() && bottom >= event->rect().top())
         {
             QString number = QString::number(blockNumber + 1);
-            painter.setPen(Qt::black);
+            //painter.setPen(Qt::black);
+            painter.setPen(Qt::lightGray);
             painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
                              Qt::AlignRight, number);
         }
